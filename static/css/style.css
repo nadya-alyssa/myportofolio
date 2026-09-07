@@ -169,6 +169,39 @@ h1, .brand {
     border: 3px solid var(--ink);
 }
 
+.h-exp {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.h-exp h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.75rem;
+    margin-bottom: 1.25rem;
+    color: var(--accent-dark);
+}
+
+.h-exp h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    font-style: italic;
+    margin-top: 1.75rem;
+    margin-bottom: 1.25rem;
+}
+
+ul {
+    list-style-type: disc;
+    color: var(--text-muted);
+    margin-left: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+hr {
+    border-top: 0.5px solid var(--line);
+}
+
 .site-footer {
     padding: 1.5rem;
     color: var(--text-muted);
@@ -191,5 +224,13 @@ h1, .brand {
 
     .social-links {
         justify-content: flex-start;
+    }
+
+    .h-exp h1 {
+        font-size: 1rem;
+    }
+
+    ul {
+        font-size: 0.85rem;
     }
 }
