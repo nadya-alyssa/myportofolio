@@ -28,9 +28,13 @@ class Experience(models.Model):
 
 class Education(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    level = models.CharField(max_length=255)
     school = models.CharField(max_length=255)
+    level = models.CharField(max_length=255)
     started_at = models.DateField()
-    ended_at = models.DateField()
+    ended_at = models.DateField(blank=True, null=True)
     def __str__(self):
-        return self.title
+        return self.school
+
+    @property
+    def is_ongoing(self):
+        return self.ended_at is None
