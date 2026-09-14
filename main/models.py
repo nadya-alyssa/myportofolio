@@ -24,3 +24,13 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+
+class Education(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    level = models.CharField(max_length=255)
+    school = models.CharField(max_length=255)
+    started_at = models.DateField()
+    ended_at = models.DateField()
+    def __str__(self):
+        return self.title
