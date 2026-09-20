@@ -1,11 +1,29 @@
 {% extends 'base.html' %}
+{% block meta %}
+    <title>Education - {{ name }}</title>
+{% endblock meta %}
 {% block content %}
     <main>
         <section class="education-section" id="education">
             <div class="container">
                 <p class="section-kicker">Perjalanan saya sejauh ini</p>
                 <h1>Education</h1>
-
+                <a href="{% url 'main:create_education' %}"
+                       class="button experience-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Pendidikan
+                </a>
+                <form method="get"
+                      action="{% url 'main:show_education' %}"
+                      class="experience-search">
+                    <input type="search"
+                           name="school"
+                           value="{{ school_query }}"
+                           placeholder="Cari berdasarkan nama tempat pendidikan"
+                           class="experience-search__input"
+                           aria-label="Cari berdasarkan nama tempat pendidikan">
+                    <button type="submit" class="button">Cari</button>
+                </form>
                 <div class="education-grid">
                     {% for education in education_list %}
                         <article class="education-card">
@@ -22,11 +40,14 @@
                             <p class="education-level">
                                 {{ education.level }}
                             </p>
+                            {% include "components/education_delete_modal.html" with education=education %}
                         </article>
                     {% empty %}
-                        <p class="empty-state">
-                            Belum ada pendidikan yang ditambahkan.
-                        </p>
+                        {% if school_query %}
+                            <p class="empty-state">Tidak ada pendidikan yang tercatat di tempat tersebut.</p>
+                        {% else %}
+                            <p class="empty-state">Belum ada pendidikan yang ditambahkan.</p>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>
