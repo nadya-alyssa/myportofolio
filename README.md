@@ -23,3 +23,13 @@ Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
 3. makemigrations membaca perubahan pada model lalu membuat file migrasi yang berisi perubahan model yang belum diaplikasikan ke database, sedangkan migrate mengaplikasikan perubahan model dalam file migrasi tersebut ke database. Contoh perubahan model yang mengharuskan kedua perintah tersebut dijalankan adalah menambah model baru di Models.py atau menambah field baru di model yang sudah ada.
 
 Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
+
+### Tugas 3
+
+1. ModelForm pada Django membuat form berdasarkan model yang sudah dibuat, sehingga setiap definisi field untuk diinput tidak perlu dibuat ulang. Selain itu, ModelForm juga memvalidasi data secara otomatis dan memudahkan proses penyimpanan data ke database. {% csrf_token %} wajib ditambahkan untuk melindungi form dari serangan yang mengubah request ke server Django menjadi request ke API lain yang berpotensi berbahaya.
+
+2. JSON lebih disukai dibanding XML karena lebih sederhana, ukurannya lebih kecil, mudah diproses, proses parsing lebih cepat, serta mudah terintegrasi dengan JavaScript dan API modern.
+
+3. Proses mengembalikan data (misal: data pendidikan) dalam bentuk JSON dilakukan melalui fungsi get_education_json() -> school_query berfungsi mengambil query yang ditulis pada parameter, dalam hal ini school -> Django mengambil seluruh data Education dari database -> data difilter berdasarkan nama sekolah (school) -> data yang didapatkan masih berbentuk object (belum JSON) -> serialization dilakukan untuk mengubah data menjadi format JSON -> data JSON dikembalikan kepada client melalui HttpResponse
+
+Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
