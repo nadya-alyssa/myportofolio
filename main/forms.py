@@ -1,6 +1,6 @@
 from django.forms import ModelForm, TextInput, Textarea, URLInput, Select, SelectDateWidget
 
-from main.models import Experience, Education
+from main.models import Experience, Project
 
 class ExperienceForm(ModelForm):
     class Meta:
@@ -55,40 +55,51 @@ class ExperienceForm(ModelForm):
             ),
         }
 
-class EducationForm(ModelForm):
+class ProjectForm(ModelForm):
     class Meta:
-        model = Education
+        model = Project
         fields = [
-            "school",
-            "level",
-            "started_at",
-            "ended_at",
+            "title",
+            "description",
+            "tech_stack",
+            "project_url",
+            "project_image_url",
         ]
 
         labels = {
-            "school": "Nama Tempat Pendidikan",
-            "level": "Jenjang Pendidikan",
-            "started_at": "Tanggal Dimulai",
-            "ended_at": "Tanggal Selesai",
+            "title": "Nama Proyek",
+            "description": "Deskripsi Proyek",
+            "tech_stack": "Teknologi yang Digunakan",
+            "project_url": "URL Proyek",
+            "project_image_url": "URL Gambar Proyek",
         }
 
         widgets = {
-            "school": TextInput(
+            "title": TextInput(
                 attrs={
-                    "placeholder": "Nama Tempat Pendidikan",
+                    "placeholder": "Portfolio Website",
                     "maxlength": 255,
                 }
             ),
-            "level": TextInput(
+            "description": Textarea(
                 attrs={
-                    "placeholder": "Jenjang Pendidikan",
-                    "maxlength": 255,
+                    "placeholder": "Ceritakan Proyekmu",
+                    "rows": 3,
                 }
             ),
-            "started_at": SelectDateWidget(
-                years=range(1999, 2100),
+            "tech_stack": TextInput(
+                attrs={
+                    "placeholder": "Django, Python, HTML, CSS",
+                }
             ),
-            "ended_at": SelectDateWidget(
-                years=range(1999, 2100),
+            "project_url": URLInput(
+                attrs={
+                    "placeholder": "https://github.com/kakBurhan/burhanquestv4",
+                }
+            ),
+            "project_image_url": URLInput(
+                attrs={
+                    "placeholder": "https://drive.google.com/thumbnail?id=...&sz=w1000",
+                }
             ),
         }

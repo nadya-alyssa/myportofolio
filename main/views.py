@@ -8,8 +8,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 import datetime
 
-from main.models import Experience, Education
-from main.forms import ExperienceForm, EducationForm
+from main.models import Experience, Project
+from main.forms import ExperienceForm, ProjectForm
 
 
 def show_main(request):
@@ -81,56 +81,56 @@ def delete_experience(request, experience_id):
 
     return redirect("main:show_experience")
 
-def show_education(request):
-    json_response = get_education_json(request)
+def show_projects(request):
+    json_response = get_projects_json(request)
 
-    education = serializers.deserialize(
+    projects = serializers.deserialize(
         "json",
         json_response.content.decode("utf-8"),
     )
-    education = [edu.object for edu in education]
-    school_query = request.GET.get("school", "").strip()
+    projects = [project.object for project in projects]
+    title_query = request.GET.get("title", "").strip()
 
     context = {
         "name": "Alyssa",
-        "education_list": education,
-        "school_query": school_query,
+        "project_list": projects,
+        "title_query": title_query,
     }
-    return render(request, "education.html", context)
+    return render(request, "project.html", context)
 
-def create_education(request):
-    form = EducationForm(request.POST or None)
+def create_project(request):
+    form = ProjectForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
         form.save()
-        messages.success(request, "Pendidikan baru berhasil ditambahkan!")
-        return redirect("main:show_education")
+        messages.success(request, "Proyek baru berhasil ditambahkan!")
+        return redirect("main:show_projects")
 
     context = {
         "name": "Alyssa",
         "form": form,
     }
-    return render(request, "education_form.html", context)
+    return render(request, "projects_form.html", context)
 
-def get_education_json(request):
-    school_query = request.GET.get("school", "").strip()
-    education = Education.objects.all()
+def get_projects_json(request):
+    title_query = request.GET.get("title", "").strip()
+    projects = Project.objects.all()
 
-    if school_query:
-        education = education.filter(school__icontains=school_query)
+    if title_query:
+        projects = projects.filter(title__icontains=title_query)
 
-    education_json = serializers.serialize("json", education)
-    return HttpResponse(education_json, content_type="application/json")
+    projects_json = serializers.serialize("json", projects)
+    return HttpResponse(projects_json, content_type="application/json")
 
-def delete_education(request, education_id):
-    education = get_object_or_404(Education, pk=education_id)
+def delete_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
 
     if request.method == "POST":
-        education.delete()
-        messages.success(request, "Pendidikan berhasil dihapus!")
-        return redirect("main:show_education")
+        project.delete()
+        messages.success(request, "Proyek berhasil dihapus!")
+        return redirect("main:show_projects")
 
-    return redirect("main:show_education")
+    return redirect("main:show_projects")
 
 def register(request):
     form = UserCreationForm(request.POST or None)

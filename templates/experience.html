@@ -2,19 +2,36 @@
 {% block meta %}
     <title>Experience - {{ name }}</title>
 {% endblock meta %}
-{% block content %}    
-    <main>
-        <section class="experience-section" id="experience">
-            <div class="container">
-                <p class="section-kicker">Perjalanan saya sejauh ini</p>
-                <h1>Experience</h1>
-                {% if user.is_superuser %}
-                    <a href="{% url 'main:create_experience' %}"
-                        class="button experience-add-button">
-                            <span aria-hidden="true">+</span>
-                            Tambah Pengalaman
+
+{% block sidebar %}
+    <aside class="side-nav">
+        <div class="side-nav__panel">
+            {% if user.is_superuser %}
+                <a href="{% url 'main:create_experience' %}" class="side-nav__add">
+                    <span aria-hidden="true">+</span> Tambah Pengalaman
+                </a>
+            {% endif %}
+            <div class="side-nav__list">
+                {% for experience in experience_list %}
+                    <a href="#exp-{{ forloop.counter }}" class="side-nav__item">
+                        {{ experience.title }}
                     </a>
-                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </aside>
+{% endblock sidebar %}
+
+{% block content %}
+    <section class="page-stage">
+        <div class="panel">
+            <div class="panel__header">
+                <span class="panel__icon" aria-hidden="true">&#128193;</span>
+                <h2 class="panel__title">Experience Log</h2>
+                <span class="panel__badge">{{ experience_list|length }} total</span>
+            </div>
+            <p class="panel__subtitle">Perjalanan saya sejauh ini</p>
+            <div class="panel__body">
                 <form method="get"
                       action="{% url 'main:show_experience' %}"
                       class="experience-search">
@@ -26,27 +43,29 @@
                            aria-label="Cari berdasarkan nama pengalaman">
                     <button type="submit" class="button">Cari</button>
                 </form>
-                <div class="experience-grid">
+                <div class="experience-stage">
                     {% for experience in experience_list %}
-                        <article class="experience-card">
+                        <article class="experience-card" id="exp-{{ forloop.counter }}">
                             {% if experience.thumbnail %}
                                 <img src="{{ experience.thumbnail }}"
                                      alt="Gambar {{ experience.title }}"
                                      class="experience-image">
                             {% endif %}
-                            <span class="experience-category">
-                                {{ experience.get_category_display }}
-                            </span>
+                            <div class="experience-card__top">
+                                <span class="experience-category">
+                                    {{ experience.get_category_display }}
+                                </span>
+                                {% if experience.is_ongoing %}
+                                    <span class="experience-status experience-status--ongoing">Sedang berlangsung</span>
+                                {% else %}
+                                    <span class="experience-status experience-status--done">Selesai</span>
+                                {% endif %}
+                            </div>
                             <h2>{{ experience.title }}</h2>
                             <p class="experience-description">
                                 {{ experience.description }}
                             </p>
 
-                            {% if experience.is_ongoing %}
-                                <p class="experience-status">Sedang berlangsung</p>
-                            {% else %}
-                                <p class="experience-status">Selesai</p>
-                            {% endif %}
                             {% if user.is_superuser %}
                                 {% include "components/project_star.html" with project=project %}
                                 {% include "components/experience_delete_modal.html" with experience=experience %}
@@ -61,6 +80,6 @@
                     {% endfor %}
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 {% endblock content %}

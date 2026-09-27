@@ -29,16 +29,13 @@ class Experience(models.Model):
     def is_ongoing(self):
         return self.ended_at is None
 
-
-class Education(models.Model):
+class Project(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    school = models.CharField(max_length=255)
-    level = models.CharField(max_length=255)
-    started_at = models.DateField()
-    ended_at = models.DateField(blank=True, null=True)
-    def __str__(self):
-        return self.school
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    tech_stack = models.CharField(max_length=255)
+    project_url = models.URLField(blank=True)
+    project_image_url = models.URLField(blank=True, max_length=500)
 
-    @property
-    def is_ongoing(self):
-        return self.ended_at is None
+    def __str__(self):
+        return self.title
