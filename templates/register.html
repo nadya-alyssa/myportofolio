@@ -7,7 +7,7 @@
         <section class="experience-section">
             <div class="container">
                 <h1>Buat Akun</h1>
-                <form method="post" action="{% url 'main:register' %}" class="project-form">
+                <form method="post" action="{% url 'main:register' %}" class="experience-form">
                     {% csrf_token %}
                     {% for error in form.non_field_errors %}
                         <p class="form-error">{{ error }}</p>

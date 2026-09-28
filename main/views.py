@@ -55,7 +55,7 @@ def create_experience(request):
         return redirect("main:show_experience")
 
     context = {
-        "name": "Alyssa",
+        "name": "Nadya Alyssa Azzahra",
         "form": form,
     }
     return render(request, "experience_form.html", context)
@@ -92,7 +92,7 @@ def show_projects(request):
     title_query = request.GET.get("title", "").strip()
 
     context = {
-        "name": "Alyssa",
+        "name": "Nadya Alyssa Azzahra",
         "project_list": projects,
         "title_query": title_query,
     }
@@ -107,7 +107,7 @@ def create_project(request):
         return redirect("main:show_projects")
 
     context = {
-        "name": "Alyssa",
+        "name": "Nadya Alyssa Azzahra",
         "form": form,
     }
     return render(request, "projects_form.html", context)
@@ -141,7 +141,7 @@ def register(request):
         return redirect("main:login")
 
     context = {
-        "name": "Alyssa",
+        "name": "Nadya Alyssa Azzahra",
         "form": form,
     }
     return render(request, "register.html", context)
@@ -157,7 +157,7 @@ def login_user(request):
         return response
 
     context = {
-        "name": "Alyssa",
+        "name": "Nadya Alyssa Azzahra",
         "form": form,
     }
     return render(request, "login.html", context)

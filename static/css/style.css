@@ -22,7 +22,7 @@
 
 body {
     font-family: "Geist Pixel", Geneva, "Trebuchet MS", sans-serif;
-    color: var(--paper);
+    color: var(--line);
     background-color: var(--ink);
     background-image:
         radial-gradient(2px 2px at 12% 20%, var(--gold) 0%, transparent 60%),
@@ -732,7 +732,8 @@ hr {
     padding: 0 0.3rem;
 }
 
-.experience-image {
+.experience-image,
+.project-image {
     display: block;
     width: 100%;
     height: auto;
@@ -947,52 +948,8 @@ hr {
     }
 }
 
-.education-section {
-    padding: 4rem 0;
-    border-top: 3px dashed var(--hot-pink);
-}
-
-.education-section h1 {
-    margin: 0.4rem 0 1.5rem;
-    font-size: 2rem;
-    color: var(--paper);
-    text-shadow: 0 0 10px rgba(255, 31, 143, 0.5);
-}
-
-.education-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.1rem;
-}
-
-.education-card {
-    padding: 1.25rem;
-    background-color: var(--ink-card);
-    border: 2px solid var(--hot-pink);
-    border-radius: var(--radius);
-    box-shadow: 0 0 0 4px var(--ink), 0 0 16px rgba(255, 31, 143, 0.35);
-}
-
-.education-time {
-    color: var(--gold);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.education-card h2 {
-    margin: 0.5rem 0;
-    font-size: 1.25rem;
-    color: var(--paper);
-}
-
-.education-level,
-.empty-state {
-    color: var(--text-muted);
-}
-
-.experience-form {
+.experience-form,
+.project-form {
     width: 100%;
     max-width: 100%;
     margin-top: 1.5rem;
@@ -1072,6 +1029,8 @@ hr {
         0 4px 0 var(--hot-pink-dark),
         0 7px 14px rgba(255, 31, 143, 0.45);
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+    margin-bottom: 15px;
+    vertical-align: middle;
 }
 
 .button::after {
@@ -1184,40 +1143,59 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(160deg, #ff9fd6, #ff2e9c 55%, #b8106a);
     box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.3);
     overflow: hidden;
 }
 
-.app-frame__bow {
-    position: absolute;
-    top: 2px;
-    left: 14px;
-    font-size: 1.8rem;
-    transform: rotate(-12deg);
-    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
-    z-index: 6;
-    pointer-events: none;
-}
-
+/* Header + footer bars use the same raised, glossy treatment as .button:
+   pink gradient, white edge, bevel shadows and the glass shine arc. */
 .app-frame .site-header,
 .app-frame .site-footer {
+    position: relative;
+    z-index: 2;
     flex: 0 0 auto;
-    background: linear-gradient(180deg, #ff8fce, #ff1f8f 60%, #c3106a);
-    border-bottom: none;
+    background: linear-gradient(180deg, var(--bubble-pink), var(--hot-pink) 65%, var(--hot-pink-dark));
+}
+
+.app-frame .site-header {
+    border-bottom: 3px solid #fff;
     box-shadow:
-        inset 0 2px 0 rgba(255, 255, 255, 0.6),
-        inset 0 -4px 8px rgba(0, 0, 0, 0.2);
+        inset 0 2px 0 rgba(255, 255, 255, 0.75),
+        inset 0 -5px 7px rgba(0, 0, 0, 0.28),
+        0 7px 14px rgba(255, 31, 143, 0.45);
+    border-bottom-left-radius: 650px;
+    border-bottom-right-radius: 650px;
 }
 
 .app-frame .site-footer {
-    border-top: none;
+    border-top: 3px solid #fff;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
     box-shadow:
-        inset 0 2px 0 rgba(255, 255, 255, 0.3),
-        inset 0 4px 8px rgba(0, 0, 0, 0.15);
+        inset 0 2px 0 rgba(255, 255, 255, 0.75),
+        inset 0 -5px 7px rgba(0, 0, 0, 0.28),
+        0 -7px 14px rgba(255, 31, 143, 0.45);
+    border-top-left-radius: 650px;
+    border-top-right-radius: 650px;
 }
 
-/* Top nav = page-level tabs (Profile / Experience / Education), each a
+/* the shine arc sits behind the bar's content (z-index -1 inside the bar's
+   own stacking context), so brand text and nav pills stay crisp */
+.app-frame .site-header::before,
+.app-frame .site-footer::before {
+    content: "";
+    position: absolute;
+    top: 10%;
+    left: 2.5%;
+    width: 95%;
+    height: 70%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+    border-radius: 999px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Top nav = page-level tabs (Profile / Experience / Projects), each a
    chunky embossed pill, active-looking regardless of page (no server-side
    "current page" detection wired up, so every tab gets the same raised
    button treatment). */
@@ -1374,20 +1352,40 @@ body {
         flex-direction: column;
     }
 
+    /* sidebar becomes a static strip under the header that scrolls sideways */
     .side-nav {
         flex: 0 0 auto;
-        max-height: 34%;
-        margin: 10px 10px 0;
+        max-height: none;
+        margin: 8px 8px 0;
+        padding: 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
     }
 
     .side-nav__panel {
         flex-direction: row;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 8px;
+        width: max-content;
+        min-width: 100%;
+    }
+
+    .side-nav__list {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
     }
 
     .side-nav__add,
     .side-nav__item {
-        flex: 1 1 auto;
+        flex: 0 0 auto;
+        width: auto;
+        white-space: nowrap;
+        max-width: 70vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -1397,4 +1395,138 @@ body {
         top: 2px;
         left: 8px;
     }
+}
+
+/* === Projects page + button alignment ===
+   .button carries margin-bottom: 15px globally; inside rows where buttons sit
+   next to other elements that margin makes them look shifted, so zero it. */
+
+.project-header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin: 0.4rem 0 1.5rem;
+}
+
+.project-header h1 {
+    margin: 0;
+}
+
+.project-header .button,
+.experience-search .button,
+.form-actions .button,
+.project-actions .button {
+    margin-bottom: 0;
+}
+
+.experience-search {
+    align-items: center;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+    margin-bottom: 15px;
+}
+
+.project-card-actions {
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+.project-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+/* === Responsive top nav: hamburger dropdown at the left (no JS) ===
+   Scoped to `.nav-toggle ~ nav`, so if the checkbox/label markup isn't in
+   base.html yet, the nav simply stays visible like before. */
+
+.nav-toggle,
+.nav-toggle-btn {
+    display: none;
+}
+
+@media (max-width: 780px) {
+    .site-header .container {
+        justify-content: flex-start;
+        gap: 0.75rem;
+        padding: 0.7rem 1rem;
+    }
+
+    .nav-toggle {
+        display: block;
+        position: absolute;
+        opacity: 0;
+        width: 1px;
+        height: 1px;
+    }
+
+    .nav-toggle-btn {
+        display: inline-block;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--hot-pink-dark);
+        padding: 0.5rem 1rem;
+        border: 2px solid #fff;
+        border-radius: 999px;
+        background: linear-gradient(180deg, #ffffff, #ffe3f2);
+        box-shadow:
+            inset 0 2px 0 rgba(255, 255, 255, 0.9),
+            inset 0 -4px 6px rgba(0, 0, 0, 0.12),
+            0 3px 0 rgba(184, 16, 106, 0.6),
+            0 5px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .nav-toggle:focus-visible + .nav-toggle-btn {
+        outline: 3px solid var(--gold);
+        outline-offset: 2px;
+    }
+
+    .nav-toggle:checked + .nav-toggle-btn {
+        background: linear-gradient(180deg, #ffd0ea, #ffb3dc);
+        box-shadow:
+            inset 0 3px 6px rgba(0, 0, 0, 0.3),
+            0 1px 0 rgba(184, 16, 106, 0.6);
+    }
+
+    /* the nav becomes a dropdown panel anchored at the left of the header */
+    .site-header .nav-toggle ~ nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0.75rem;
+        z-index: 20;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        gap: 0.5rem;
+        min-width: 220px;
+        max-width: calc(100vw - 1.5rem);
+        padding: 12px;
+        background: linear-gradient(180deg, #ffb3dc, #ff2e9c);
+        border: 3px solid #fff;
+        border-radius: 16px;
+        box-shadow:
+            inset 0 2px 0 rgba(255, 255, 255, 0.7),
+            0 12px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .site-header .nav-toggle:checked ~ nav {
+        display: flex;
+    }
+
+    .site-header nav a,
+    .site-header nav .nav-user {
+        text-align: left;
+    }
+
 }

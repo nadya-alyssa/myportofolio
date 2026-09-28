@@ -12,9 +12,10 @@
 </head>
 <body>
   <div class="app-frame">
-    <span class="app-frame__bow" aria-hidden="true">&#127872;</span>
     <header class="site-header">
       <div class="container">
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Buka menu">
+        <label for="nav-toggle" class="nav-toggle-btn"><span aria-hidden="true">&#9776;</span> Menu</label>
           <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
           <nav>
               <a href="{% url 'main:show_main' %}">Profile</a>
