@@ -208,12 +208,15 @@ def toggle_star_project(request, project_id):
 
 @login_required(login_url="/login/")
 def edit_project(request, project_id):
+    if not request.user.has_perm("main.change_project"):
+        raise PermissionDenied
+    
     project = get_object_or_404(Project, pk=project_id)
 
     if request.method == "GET":
         context = {
             "nama": "Nadya Alyssa Azzahra",
-            "form": ProjectForm(instance=project), 
+            "form": ProjectForm(instance=project),
             "id": project_id
             }
         return render(request, "projects_form.html", context)
@@ -224,3 +227,26 @@ def edit_project(request, project_id):
             form.save()
             messages.success(request, "Proyek berhasil diperbarui!")
             return redirect("main:show_projects")
+
+@login_required(login_url="/login/")
+def edit_experience(request, experience_id):
+    if not request.user.has_perm("main.change_experience"):
+        raise PermissionDenied
+    
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+
+    if request.method == "GET":
+        context = {
+            "nama": "Nadya Alyssa Azzahra",
+            "form": ExperienceForm(instance=experience),
+            "id": experience_id
+            }
+        return render(request, "experience_form.html", context)
+    
+    elif request.method == "POST":
+        form = ExperienceForm(request.POST, instance=experience)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Pengalaman berhasil diperbarui!")
+            return redirect("main:show_experience")

@@ -8,7 +8,7 @@
             <div class="container">
                 <h1>{% if id %}Edit{% else %}Add New{% endif %} Project</h1>
                 <form method="post"
-                      action="{% url 'main:create_project' %}"
+                      action="{% if id %}{% url 'main:edit_project' id %}{% else %}{% url 'main:create_project' %}{% endif %}"
                       class="project-form">
                     {% csrf_token %}
                     {% for field in form %}
@@ -21,7 +21,7 @@
                         </div>
                     {% endfor %}
                     <div class="form-actions">
-                        <button type="submit" class="button">Tambah Project</button>
+                        <button type="submit" class="button">{% if id %}Simpan{% else %}Tambah{% endif %} Proyek</button>
                         <a href="{% url 'main:show_projects' %}" class="button button-secondary">Batal</a>
                     </div>
                 </form>

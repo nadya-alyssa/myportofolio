@@ -33,3 +33,7 @@ Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
 3. Proses mengembalikan data (misal: data pendidikan) dalam bentuk JSON dilakukan melalui fungsi get_education_json() -> school_query berfungsi mengambil query yang ditulis pada parameter, dalam hal ini school -> Django mengambil seluruh data Education dari database -> data difilter berdasarkan nama sekolah (school) -> data yang didapatkan masih berbentuk object (belum JSON) -> serialization dilakukan untuk mengubah data menjadi format JSON -> data JSON dikembalikan kepada client melalui HttpResponse
 
 Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
+
+### Tugas 3
+
+Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
