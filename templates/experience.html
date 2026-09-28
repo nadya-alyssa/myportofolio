@@ -7,7 +7,7 @@
     <aside class="side-nav">
         <div class="side-nav__panel">
             {% if user.is_superuser %}
-                <a href="{% url 'main:create_experience' %}" class="side-nav__add">
+                <a href="{% url 'main:create_experience' %}" class="button experience-add-button" style="font-size: 14px;">
                     <span aria-hidden="true">+</span> Tambah Pengalaman
                 </a>
             {% endif %}
@@ -65,9 +65,8 @@
                             <p class="experience-description">
                                 {{ experience.description }}
                             </p>
-
+                            {% include "components/experience_star.html" with experience=experience %}
                             {% if user.is_superuser %}
-                                {% include "components/project_star.html" with project=project %}
                                 {% include "components/experience_delete_modal.html" with experience=experience %}
                             {% endif %}
                         </article>

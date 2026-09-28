@@ -72,6 +72,9 @@ def get_experience_json(request):
 
 @login_required(login_url="/login/")
 def delete_experience(request, experience_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
@@ -98,7 +101,11 @@ def show_projects(request):
     }
     return render(request, "project.html", context)
 
+@login_required(login_url="/login/")
 def create_project(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     form = ProjectForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -122,7 +129,11 @@ def get_projects_json(request):
     projects_json = serializers.serialize("json", projects)
     return HttpResponse(projects_json, content_type="application/json")
 
+@login_required(login_url="/login/")
 def delete_project(request, project_id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     project = get_object_or_404(Project, pk=project_id)
 
     if request.method == "POST":
@@ -169,7 +180,7 @@ def logout_user(request):
     return response
 
 @login_required(login_url="/login/")
-def toggle_star(request, experience_id):
+def toggle_star_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
@@ -179,3 +190,37 @@ def toggle_star(request, experience_id):
             experience.starred_by.add(request.user)
 
     return redirect("main:show_experience")
+
+@login_required(login_url="/login/")
+def toggle_star_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+
+    if request.method == "POST":
+        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
+        # Kalau belum, tambahkan star.
+        if request.user in project.starred_by.all():
+            project.starred_by.remove(request.user)
+        else:
+            project.starred_by.add(request.user)
+
+    return redirect("main:show_projects")
+
+
+@login_required(login_url="/login/")
+def edit_project(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+
+    if request.method == "GET":
+        context = {
+            "nama": "Nadya Alyssa Azzahra",
+            "form": ProjectForm(instance=project), 
+            "id": project_id
+            }
+        return render(request, "projects_form.html", context)
+    
+    elif request.method == "POST":
+        form = ProjectForm(request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Proyek berhasil diperbarui!")
+            return redirect("main:show_projects")
