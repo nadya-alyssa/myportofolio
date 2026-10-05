@@ -22,4 +22,5 @@ urlpatterns = [
     path("projects/<uuid:project_id>/edit/", edit_project, name="edit_project"),
     path("experience/<uuid:experience_id>/edit/", edit_experience, name="edit_experience"),
     path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
+    path("experience/add-ajax/", create_experience_ajax, name="create_experience_ajax"),
 ]

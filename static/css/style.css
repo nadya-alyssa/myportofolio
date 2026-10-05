@@ -579,7 +579,6 @@ textarea { width: 100%; min-height: 70px; }
 .experience-description { user-select: text; }
 .panel__header { display: flex; align-items: center; gap: 6px; }
 .panel__title { margin: 0; }
-.panel__badge { margin-left: auto; border: 1px inset var(--window-bg); background: var(--field-bg); padding: 0 4px; }
 .panel__subtitle { color: var(--text-muted); margin-bottom: 6px; }
 .side-nav__panel { border: 2px groove var(--window-border-light); padding: 6px; margin-bottom: 8px; }
 .side-nav__list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }

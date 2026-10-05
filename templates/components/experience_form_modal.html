@@ -1,26 +1,26 @@
-<div id="add-project-modal"
+<div id="add-experience-modal"
      class="project-form-modal"
      popover="auto"
      role="dialog"
      aria-modal="true"
-     aria-labelledby="add-project-modal-title">
+     aria-labelledby="add-experience-modal-title">
     <button type="button"
             class="project-form-modal__backdrop"
-            popovertarget="add-project-modal"
+            popovertarget="add-experience-modal"
             popovertargetaction="hide"
-            aria-label="Tutup form tambah proyek"></button>
+            aria-label="Tutup form tambah pengalaman"></button>
 
     <div class="project-form-modal__content">
         <button type="button"
                 class="project-form-modal__close"
-                popovertarget="add-project-modal"
+                popovertarget="add-experience-modal"
                 popovertargetaction="hide"
-                aria-label="Tutup form tambah proyek">×</button>
+                aria-label="Tutup form tambah pengalaman">×</button>
 
-        <h2 id="add-project-modal-title">{% if id %}Edit{% else %}Add New{% endif %} Project</h2>
-        <form id="project-form"
+        <h2 id="add-experience-modal-title">{% if id %}Edit{% else %}Add New{% endif %} Experience</h2>
+        <form id="experience-form"
               method="post"
-              action="{% url 'main:create_project' %}"
+              action="{% if id %}{% url 'main:edit_experience' id %}{% else %}{% url 'main:create_experience' %}{% endif %}"
               class="project-form">
             {% csrf_token %}
             {% for field in form %}
@@ -35,7 +35,7 @@
             <div class="project-form-modal__actions">
                 <button type="button"
                         class="button button-secondary"
-                        popovertarget="add-project-modal"
+                        popovertarget="add-experience-modal"
                         popovertargetaction="hide">Batal</button>
                 <button type="submit" class="button">{% if id %}Simpan{% else %}Tambah{% endif %} Proyek</button>
             </div>
