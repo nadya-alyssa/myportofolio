@@ -1,42 +1,51 @@
 {% extends 'base.html' %}
-{% block meta %}
-    <title>Profile - {{ name }}</title>
-{% endblock meta %}
+{% block meta %}Profile - {{ name }}{% endblock meta %}
+
 {% block content %}
-    <main>
-        <section class="hero" id="profile">
-            <div class="container hero-grid">
-                <div class="hero-identity">
-                    <p class="hero-kicker">Information Systems &middot; Universitas Indonesia</p>
-                    <h1>{{ name }}</h1>
-                </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/alyssa.jpg" alt="Photo of {{ name }}">
-                </div>
-                <div class="hero-details">
-                    <p class="bio">{{ bio }}</p>
-                    <dl class="meta-list">
-                        <div class="meta-row">
-                            <dt>NPM</dt>
-                            <dd>{{ npm }}</dd>
-                        </div>
-                        <div class="meta-row">
-                            <dt>Program</dt>
-                            <dd>{{ study_program }}</dd>
-                        </div>
-                        <div class="meta-row">
-                            <dt>Sesi Terakhir Login</dt>
-                            <dd>{{ last_login }}</dd>
-                        </div>
-                    </dl>
-                    <div class="social-links">
-                        <a href="https://github.com/nadya-alyssa" class="social-link">GitHub</a>
-                        <a href="https://www.linkedin.com/in/nadya-alyssa-azzahra-96a5b437b/" class="social-link">LinkedIn</a>
-                        <a href="mailto:nadya.alyssa0605@gmail.com" class="social-link">Email</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+<div class="xp-profile-workspace">
+    <p class="xp-profile-institution">Information Systems · Universitas Indonesia</p>
+    
+    <!-- Profile Avatar Presentation Layer -->
+    <div class="xp-avatar-container">
+        <img class="xp-avatar" src="/static/img/alyssa.jpg" alt="Photo of {{ name }}">
+    </div>
+    
+    <h1 class="xp-profile-name">{{ name }}</h1>
+    
+    <!-- Student System Parameters Group Box -->
+    <fieldset class="xp-profile-fieldset">
+        <legend>Student Identity Parameters</legend>
+        <div class="field-row">
+            <strong class="xp-field-label">NPM:</strong>
+            <span class="xp-field-value">{{ npm }}</span>
+        </div>
+        <div class="field-row xp-field-row-spacing">
+            <strong class="xp-field-label">Program:</strong>
+            <span class="xp-field-value">{{ study_program }}</span>
+        </div>
+    </fieldset>
+
+    <!-- Bio Statement Configuration Box -->
+    <fieldset class="xp-profile-fieldset">
+        <legend>Biography Overview</legend>
+        <p class="xp-profile-bio">
+            {{ bio }}
+        </p>
+    </fieldset>
+
+    <!-- Interactive Navigation Shortcuts -->
+    <fieldset class="xp-profile-fieldset xp-network-fieldset">
+        <legend>Network Shortcuts</legend>
+        <div class="field-row xp-network-row">
+            <button onclick="window.open('#', '_blank')">GitHub</button>
+            <button onclick="window.open('#', '_blank')">LinkedIn</button>
+            <button onclick="window.location.href='mailto:#'">Email</button>
+        </div>
+    </fieldset>
+
+    <!-- Local Operational Diagnostics Panel -->
+    <div class="status-bar xp-profile-statusbar">
+        <p class="status-bar-field">Sesi Terakhir Login: {{ last_login }}</p>
+    </div>
+</div>
 {% endblock content %}

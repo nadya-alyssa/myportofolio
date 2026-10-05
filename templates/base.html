@@ -4,52 +4,270 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Henny+Penny&family=Geist+Pixel&family=Pacifico&family=VT323&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <script>try { var t = localStorage.getItem('portfolio-theme'); if (t && t !== 'default') document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     {% block meta %} {% endblock meta %}
+    <!-- Halaman daftar (Projects/Experience) pakai window lebar; halaman lain window ringkas -->
+    <script>document.documentElement.classList.add(/^\/(projects|experience)\/?$/i.test(location.pathname) ? 'page-wide' : 'page-narrow');</script>
 </head>
 <body>
-  <div class="app-frame">
-    <header class="site-header">
-      <div class="container">
-        <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Buka menu">
-        <label for="nav-toggle" class="nav-toggle-btn"><span aria-hidden="true">&#9776;</span> Menu</label>
-          <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
-          <nav>
-              <a href="{% url 'main:show_main' %}">Profile</a>
-              <a href="{% url 'main:show_experience' %}">Experience</a>
-              <a href="{% url 'main:show_projects' %}">Projects</a>
-              {% if user.is_authenticated %}
-                  <span class="nav-user">{{ user.username }}</span>
-                  <a href="{% url 'main:logout' %}">Logout</a>
-              {% else %}
-                  <a href="{% url 'main:login' %}">Login</a>
-                  <a href="{% url 'main:register' %}">Register</a>
-              {% endif %}
-          </nav>
-      </div>
-    </header>
-
-    <div class="app-frame__body">
-      {% block sidebar %}{% endblock sidebar %}
-      <main class="app-frame__scroll">
-        <div class="page-shell">
-          <div class="page-box">
-            {% block content %} {% endblock content %}
-          </div>
+    <!-- DESKTOP -->
+    <div id="desktop">
+        <div class="desktop-icons">
+            <a href="{% url 'main:show_main' %}" class="icon">
+                <div class="icon-image"><i class="fas fa-user"></i></div>
+                <span class="icon-text">Profile</span>
+            </a>
+            <a href="{% url 'main:show_experience' %}" class="icon">
+                <div class="icon-image"><i class="fas fa-briefcase"></i></div>
+                <span class="icon-text">Experience</span>
+            </a>
+            <a href="{% url 'main:show_projects' %}" class="icon">
+                <div class="icon-image"><i class="fas fa-folder"></i></div>
+                <span class="icon-text">Projects</span>
+            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'main:logout' %}" class="icon">
+                    <div class="icon-image"><i class="fas fa-sign-out-alt"></i></div>
+                    <span class="icon-text">Logout</span>
+                </a>
+            {% else %}
+                <a href="{% url 'main:login' %}" class="icon">
+                    <div class="icon-image"><i class="fas fa-key"></i></div>
+                    <span class="icon-text">Login</span>
+                </a>
+                <a href="{% url 'main:register' %}" class="icon">
+                    <div class="icon-image"><i class="fas fa-user-plus"></i></div>
+                    <span class="icon-text">Register</span>
+                </a>
+            {% endif %}
+            <div class="icon" id="icon-themes" role="button" tabindex="0">
+                <div class="icon-image"><i class="fas fa-palette"></i></div>
+                <span class="icon-text">Themes</span>
+            </div>
         </div>
-      </main>
+
+        <!-- Window halaman: isi tiap page (Profile, Experience, Projects, Login, dst.) tampil di sini -->
+        <div class="window visible active page-window" id="page-window">
+            <div class="window-header" id="window-titlebar">
+                <span class="window-title" id="window-title">{{ name }}</span>
+                <div class="window-controls">
+                    <a href="#" class="window-button minimize-btn" id="window-minimize" aria-label="Minimize">_</a>
+                    <a href="#" class="window-button maximize-btn" id="window-maximize" aria-label="Maximize">&#9633;</a>
+                    <a href="#" class="window-button close-btn" id="window-close" aria-label="Close">&times;</a>
+                </div>
+            </div>
+            <div class="window-menubar" aria-hidden="true">
+                <span>File</span><span>Edit</span><span>View</span><span>Favorites</span><span>Help</span>
+            </div>
+            <div class="window-body">
+                {% block sidebar %}{% endblock sidebar %}
+                <main class="window-content">
+                    {% block content %} {% endblock content %}
+                </main>
+            </div>
+            <div class="window-statusbar">{{ name }} &middot; Fakultas Ilmu Komputer, Universitas Indonesia</div>
+        </div>
+
+        <!-- Dialog tema (Display Properties) -->
+        <div class="window dialog-window" id="themes-window">
+            <div class="window-header" id="themes-titlebar">
+                <span class="window-title"><i class="fas fa-palette"></i> Display Properties</span>
+                <div class="window-controls">
+                    <a href="#" class="window-button close-btn" id="themes-close" aria-label="Close">&times;</a>
+                </div>
+            </div>
+            <div class="window-content">
+                <h3>Desktop Themes</h3>
+                <p>Pilih skema warna untuk desktop:</p>
+                <div class="theme-box">
+                    <h4>Available Themes:</h4>
+                    <label><input type="radio" name="theme" value="default" checked> Windows Standard</label>
+                    <label><input type="radio" name="theme" value="pink"> Pastel Pink</label>
+                    <label><input type="radio" name="theme" value="cyberpunk"> Cyberpunk</label>
+                    <label><input type="radio" name="theme" value="lilac"> Lilac</label>
+                    <label><input type="radio" name="theme" value="green"> Forest Green</label>
+                </div>
+                <div class="theme-box">
+                    <h4>Preview:</h4>
+                    <div class="theme-preview" id="preview-desktop">
+                        <div class="theme-preview__window" id="preview-window">
+                            <div class="theme-preview__bar" id="preview-titlebar">Sample Window</div>
+                            <div class="theme-preview__body" id="preview-content">This is a preview of the selected theme.</div>
+                            <span class="theme-preview__btn" id="preview-button">Button</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="dialog-actions">
+                    <button type="button" id="theme-apply">Apply</button>
+                    <button type="button" id="theme-ok">OK</button>
+                    <button type="button" id="theme-reset">Reset</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+    <!-- TASKBAR -->
+    <div class="taskbar">
+        <div class="start-button" id="start-btn"><i class="fab fa-windows"></i> Start</div>
+        <div class="taskbar-items" id="taskbar-items">
+            <button type="button" class="taskbar-item active" id="taskbar-page-btn"><i class="fas fa-folder-open"></i>&nbsp;<span id="taskbar-page-label">{{ name }}</span></button>
         </div>
-    </footer>
-  </div>
+        <div class="taskbar-user">
+            {% if user.is_authenticated %}<span class="nav-user"><i class="fas fa-user-circle"></i> {{ user.username }}</span>{% endif %}
+            <span class="clock-text" id="clock">12:00 PM</span>
+        </div>
+    </div>
 
-  {% include 'components/toast.html' %}
+    <!-- START MENU -->
+    <div class="start-menu" id="start-menu">
+        <div class="start-menu-header"><i class="fab fa-windows"></i> {% if user.is_authenticated %}{{ user.username }}{% else %}Guest{% endif %}</div>
+        <div class="start-menu-items">
+            <a href="{% url 'main:show_main' %}" class="start-menu-item"><i class="fas fa-user"></i> Profile</a>
+            <a href="{% url 'main:show_experience' %}" class="start-menu-item"><i class="fas fa-briefcase"></i> Experience</a>
+            <a href="{% url 'main:show_projects' %}" class="start-menu-item"><i class="fas fa-folder"></i> Projects</a>
+            <div class="start-menu-item" id="start-themes"><i class="fas fa-palette"></i> Themes</div>
+            <div class="start-menu-separator"></div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'main:logout' %}" class="start-menu-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            {% else %}
+                <a href="{% url 'main:login' %}" class="start-menu-item"><i class="fas fa-key"></i> Login</a>
+                <a href="{% url 'main:register' %}" class="start-menu-item"><i class="fas fa-user-plus"></i> Register</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include 'components/toast.html' %}
+
+    <script>
+    // Window chrome ala Windows 98: minimize/maximize/close, start menu, jam, drag.
+    // Setiap page tetap halaman Django dengan URL sendiri; script ini hanya mengatur tampilan window.
+    (function () {
+        var win = document.getElementById('page-window');
+        var pageBtn = document.getElementById('taskbar-page-btn');
+        var startBtn = document.getElementById('start-btn');
+        var startMenu = document.getElementById('start-menu');
+
+        // Judul window & tombol taskbar diambil dari <title> halaman (mis. "Projects - Nama")
+        var pageTitle = document.title.trim();
+        if (pageTitle) {
+            document.getElementById('window-title').textContent = pageTitle;
+            document.getElementById('taskbar-page-label').textContent = pageTitle.split(' - ')[0];
+        }
+
+        function setVisible(v) {
+            win.classList.toggle('visible', v);
+            win.classList.toggle('inactive', !v);
+            pageBtn.classList.toggle('active', v);
+        }
+        document.getElementById('window-minimize').addEventListener('click', function (e) { e.preventDefault(); setVisible(false); });
+        document.getElementById('window-close').addEventListener('click', function (e) { e.preventDefault(); setVisible(false); });
+        document.getElementById('window-maximize').addEventListener('click', function (e) { e.preventDefault(); win.classList.toggle('maximized'); });
+        pageBtn.addEventListener('click', function () { setVisible(!win.classList.contains('visible')); });
+
+        // Start menu: buka/tutup lewat tombol Start; tutup juga saat klik di luar, tekan Esc, atau pilih menu
+        function openStart() { startMenu.classList.add('visible'); startBtn.classList.add('active'); }
+        function closeStart() { startMenu.classList.remove('visible'); startBtn.classList.remove('active'); }
+        startBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (startMenu.classList.contains('visible')) closeStart(); else openStart();
+        });
+        startMenu.addEventListener('click', closeStart);
+        document.addEventListener('click', function (e) {
+            if (!startMenu.contains(e.target) && !startBtn.contains(e.target)) closeStart();
+            var icon = e.target.closest('.icon');
+            document.querySelectorAll('.icon').forEach(function (i) { i.classList.toggle('selected', i === icon); });
+        });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeStart(); });
+
+        function updateClock() {
+            document.getElementById('clock').textContent =
+                new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+        updateClock();
+        setInterval(updateClock, 30 * 1000);
+
+        // Drag lewat title bar (window halaman maupun dialog tema)
+        var dragEl = null, dx = 0, dy = 0;
+        document.addEventListener('mousedown', function (e) {
+            var h = e.target.closest('.window-header');
+            if (!h || e.target.closest('.window-controls')) return;
+            var w = h.parentElement;
+            if (w.classList.contains('maximized')) return;
+            var r = w.getBoundingClientRect();
+            dx = e.clientX - r.left; dy = e.clientY - r.top;
+            w.style.position = 'absolute'; w.style.margin = '0'; w.style.transform = 'none';
+            w.style.right = 'auto'; w.style.bottom = 'auto';
+            w.style.width = r.width + 'px'; w.style.left = r.left + 'px'; w.style.top = r.top + 'px';
+            if (w.id === 'page-window') { w.style.height = r.height + 'px'; w.style.maxHeight = 'none'; }
+            dragEl = w;
+            e.preventDefault();
+        });
+        document.addEventListener('mousemove', function (e) {
+            if (!dragEl) return;
+            dragEl.style.left = Math.max(0, Math.min(e.clientX - dx, window.innerWidth - 80)) + 'px';
+            dragEl.style.top = Math.max(0, Math.min(e.clientY - dy, window.innerHeight - 60)) + 'px';
+        });
+        document.addEventListener('mouseup', function () { dragEl = null; });
+
+        // ---- Tema (Display Properties) ----
+        var root = document.documentElement;
+        var themesWin = document.getElementById('themes-window');
+        var THEMES = {
+            default:   { name: 'Windows Standard', desktop: '#008080', window: '#c0c0c0', titlebar: 'linear-gradient(90deg, #000080 0%, #0040c0 100%)', text: '#000000', button: '#c0c0c0' },
+            pink:      { name: 'Pastel Pink', desktop: '#f8bbd9', window: '#fdf2f8', titlebar: 'linear-gradient(90deg, #ec4899 0%, #be185d 100%)', text: '#000000', button: '#fdf2f8' },
+            cyberpunk: { name: 'Cyberpunk', desktop: 'linear-gradient(135deg, #0a0a0a 0%, #1a0033 50%, #000a1a 100%)', window: '#0d1117', titlebar: 'linear-gradient(90deg, #ff00ff 0%, #00ffff 100%)', text: '#00ffff', button: '#21262d' },
+            lilac:     { name: 'Lilac', desktop: '#c8b2db', window: '#e6e6fa', titlebar: 'linear-gradient(90deg, #9370db 0%, #663399 100%)', text: '#000000', button: '#e6e6fa' },
+            green:     { name: 'Forest Green', desktop: '#228b22', window: '#f0fff0', titlebar: 'linear-gradient(90deg, #008000 0%, #004000 100%)', text: '#000000', button: '#f0fff0' }
+        };
+        function savedTheme() {
+            try { var t = localStorage.getItem('portfolio-theme'); return THEMES[t] ? t : 'default'; } catch (e) { return 'default'; }
+        }
+        function setTheme(name) {
+            if (name === 'default') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', name);
+            try { localStorage.setItem('portfolio-theme', name); } catch (e) {}
+        }
+        function selectedTheme() {
+            var r = themesWin.querySelector('input[name="theme"]:checked');
+            return r ? r.value : 'default';
+        }
+        function previewTheme(name) {
+            var t = THEMES[name]; if (!t) return;
+            document.getElementById('preview-desktop').style.background = t.desktop;
+            var w = document.getElementById('preview-window');
+            w.style.background = t.window; w.style.borderColor = t.window;
+            document.getElementById('preview-titlebar').style.background = t.titlebar;
+            var c = document.getElementById('preview-content'); c.style.color = t.text;
+            var btn = document.getElementById('preview-button');
+            btn.style.background = t.button; btn.style.borderColor = t.button; btn.style.color = t.text;
+        }
+        function openThemes() {
+            var name = savedTheme();
+            themesWin.querySelectorAll('input[name="theme"]').forEach(function (r) { r.checked = (r.value === name); });
+            previewTheme(name);
+            themesWin.classList.add('visible');
+        }
+        function closeThemes() { themesWin.classList.remove('visible'); }
+        function applyTheme(name) {
+            setTheme(name);
+            if (typeof showToast === 'function') showToast('Tema diterapkan', THEMES[name].name, 'success');
+        }
+        themesWin.querySelectorAll('input[name="theme"]').forEach(function (r) {
+            r.addEventListener('change', function () { previewTheme(r.value); });
+        });
+        document.getElementById('theme-apply').addEventListener('click', function () { applyTheme(selectedTheme()); });
+        document.getElementById('theme-ok').addEventListener('click', function () { applyTheme(selectedTheme()); closeThemes(); });
+        document.getElementById('theme-reset').addEventListener('click', function () {
+            themesWin.querySelector('input[value="default"]').checked = true; previewTheme('default'); applyTheme('default');
+        });
+        document.getElementById('themes-close').addEventListener('click', function (e) { e.preventDefault(); closeThemes(); });
+        var iconThemes = document.getElementById('icon-themes');
+        iconThemes.addEventListener('click', openThemes);
+        iconThemes.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openThemes(); } });
+        document.getElementById('start-themes').addEventListener('click', openThemes);
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeThemes(); });
+    })();
+    </script>
 </body>
 </html>
