@@ -34,6 +34,16 @@ Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
 
 Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
 
-### Tugas 3
+### Tugas 4
 
 Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
+
+### Tugas 5
+
+1. Debouncing merupakan teknik menunda suatu fungsi hingga user berhenti memicu sebuah event selama jeda waktu tertentu. Setiap event baru akan mereset timer, sehingga fungsi hanya berjalan setelah user selesai. Debouncing penting diterapkan dalam fitur pencarian dengan AJAX karena bisa menghemat beban server dan database, mengurangi request ke server, serta membuat UI jadi lebih stabil.
+
+2. fetch() merupakan fungsi async dan selalu mengembalikan sebuah Promise. await menjeda eksekusi fungsi async sampai Promise itu selesai diproses sebelum lanjut ke kode berikutnya. Tanpa await, kode berikutnya akan langsung berjalan tanpa menunggu hasil Promise selesai sehingga bisa terjadi error/hasil salah karena kode belum mendapat data yang dibutuhkan.
+
+3. XSS adalah serangan dimana penyerang menyisipkan kode JavaScript miliknya ke halaman web yang kemudian dijalankan di browser korban. Data yang ditampilkan melalui AJAX/JavaScript lebih rentan terkena serangan ini dibanding yang langsung pakai template Django. Hal ini karena Django melalukan escaping secara otomatis, sedangkan AJAX ataupun JavaScript tidak memiliki perlindungan tersebut secara otomatis sehingga harus diaplikasikan secara manual.
+
+Disclosure AI: saya menggunakan Claude untuk membantu dalam penerapan JavaScript untuk mengubah format tampilan DateField() di experience.html dan menerapkan fitur edit di experience.html yang kemudian saya aplikasikan juga di project.html
