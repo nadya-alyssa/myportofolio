@@ -47,3 +47,22 @@ Disclosure AI: saya tidak menggunakan bantuan AI dalam mengerjakan tugas ini.
 3. XSS adalah serangan dimana penyerang menyisipkan kode JavaScript miliknya ke halaman web yang kemudian dijalankan di browser korban. Data yang ditampilkan melalui AJAX/JavaScript lebih rentan terkena serangan ini dibanding yang langsung pakai template Django. Hal ini karena Django melalukan escaping secara otomatis, sedangkan AJAX ataupun JavaScript tidak memiliki perlindungan tersebut secara otomatis sehingga harus diaplikasikan secara manual.
 
 Disclosure AI: saya menggunakan Claude untuk membantu dalam penerapan JavaScript untuk mengubah format tampilan DateField() di experience.html dan menerapkan fitur edit di experience.html yang kemudian saya aplikasikan juga di project.html
+
+### Tugas 6
+
+1. REST (Representational State Transfer) adalah gaya arsitektur untuk merancang web API, bukan library maupun format data. Mengembalikan JSON saja belum cukup untuk menyebut sebuah API sebagai RESTful karena JSON hanyalah format data, sedangkan REST adalah cara API diatur. Endpoint seperti /api/get-projects/, /api/delete-project/5/, atau /projects/add-ajax/ bisa saja mengembalikan JSON, tetapi tetap tidak RESTful karena tindakan ditulis di URL, method HTTP tidak dimanfaatkan sesuai maknanya, dan resource tidak terstruktur.
+
+Perbedaan PUT dan PATCH adalah PUT mengirim representasi pengganti sehingga seluruh field wajib dikirim, sedangkan PATCH hanya mengirim field yang ingin diubah dan field lain tetap memakai nilai sebelumnya. Selain itu, PUT cocok dipakai saat form edit mengirim seluruh data sekaligus, sedangkan PATCH cocok untuk mengubah satu atau beberapa field saja, misalnya hanya mengganti judul experience.
+
+2. Serializer pada DRF berperan sebagai penerjemah dua arah antara objek model dan data yang dikirim ke klien. Pada GET, serializer mengubah objek model menjadi tipe data Python yang kemudian dirender menjadi JSON (serialization), sedangkan pada POST/PUT/PATCH, serializer memeriksa input dan mengubahnya menjadi data tervalidasi yang siap disimpan (deserialization). Serializer lebih menguntungkan dibanding merakit dictionary manual karena tidak perlu ditulis berulang, langsung bisa validasi, field hasil perhitungan seperti star_count tidak bisa dipalsukan klien, serta bentuk data lebih sederhana dan konsisten.
+
+3. Perbedaan autentikasi dan otorisasi pada Django REST Framework adalah autentikasi menjawab pertanyaan "siapa kamu", sedangkan otorisasi menjawab "apa yang boleh kamu lakukan". Pada DRF, authentication class mengenali session login lalu mengisi request.user, kemudian permission class (IsPortfolioOwnerOrEditorOrReadOnly dan IsAuthenticated) memutuskan apakah request boleh diteruskan ke isi view.
+
+Hak akses harus diperiksa dengan permission class di server karena menyembunyikan tombol di template hanya mengatur tampilan, bukan membatasi eksekusi perintah di server. Siapa pun bisa mengirim request langsung lewat DevTools Console, Browsable API, atau tools seperti curl tanpa melewati tombol di halaman. Oleh karena itu, permission class di sisi server (seperti IsPortfolioOwnerOrEditorOrReadOnly) merupakan pertahanan utama untuk memvalidasi dan memblokir request tidak sah dengan status 403 Forbidden.
+
+4. SessionAuthentication mengandalkan cookie sessionid, dan browser mengirim cookie domain secara otomatis pada setiap request ke domain tersebut, termasuk yang dipicu situs penyerang. Tanpa perlindungan, halaman jahat bisa membuat browser korban yang sedang login mengirim POST/DELETE ke API kita dan server mengira itu tindakan sah (serangan CSRF).
+
+Test yang memakai force_authenticate tidak cukup untuk membuktikan bahwa perlindungan CSRF berjalan karena force_authenticate pada APITestCase hanya melakukan bypass/penetapan langsung identitas request.user untuk mempermudah pengujian otorisasi (permission) tanpa melalui proses login sesi yang sebenarnya. Jadi test dengan force_authenticate hanya berguna untuk menguji permission (siapa boleh apa), bukan login dan CSRF. Test seperti itu akan tetap hijau walaupun perlindungan CSRF rusak atau dimatikan.
+
+Disclosure AI: saya menggunakan Claude untuk membantu dalam menyesuaikan main/tests.py yang sebelumnya belum diubah.
+                                                                                
