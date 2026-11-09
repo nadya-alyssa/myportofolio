@@ -26,4 +26,62 @@
             </div>
         </section>
     </main>
+{% if id %}
+    <script>
+        const DETAIL_EXPERIENCE_URL = "{% url 'api:experience-detail' id %}";
+        const EXPERIENCE_LIST_URL = "{% url 'main:show_experience' %}";
+        const experienceEditForm = document.querySelector('form.experience-form');
+
+        function getCookie(name) {
+            const prefix = `${name}=`;
+            const cookie = document.cookie.split(';').map(value => value.trim())
+                .find(value => value.startsWith(prefix));
+            return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+        }
+
+        function dateFromSelects(fields, name) {
+            const year = fields.get(`${name}_year`);
+            const month = fields.get(`${name}_month`);
+            const day = fields.get(`${name}_day`);
+            if (!year || !month || !day) return null;
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        }
+
+        function apiErrorMessage(data, status) {
+            const messages = Object.values(data).flat().filter(value => typeof value === 'string');
+            return messages.join(' ') || `Terjadi kesalahan (status ${status}).`;
+        }
+
+        experienceEditForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const button = experienceEditForm.querySelector('button[type="submit"]');
+            button.disabled = true;
+            try {
+                const fields = new FormData(experienceEditForm);
+                const response = await fetch(DETAIL_EXPERIENCE_URL, {
+                    method: 'PATCH',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        title: fields.get('title'),
+                        description: fields.get('description'),
+                        category: fields.get('category'),
+                        thumbnail: fields.get('thumbnail'),
+                        started_at: dateFromSelects(fields, 'started_at'),
+                        ended_at: dateFromSelects(fields, 'ended_at'),
+                    }),
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(apiErrorMessage(data, response.status));
+                window.location.href = EXPERIENCE_LIST_URL;
+            } catch (error) {
+                showToast('Gagal menyimpan perubahan', error.message, 'error');
+                button.disabled = false;
+            }
+        });
+    </script>
+    {% endif %}
 {% endblock content %}
